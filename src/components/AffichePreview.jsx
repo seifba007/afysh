@@ -1,5 +1,5 @@
 import React from 'react';
-import { flags } from '../data/flags.js';
+import { flagUrl, flagLabels } from '../data/flags.js';
 import { regions } from '../data/regions.js';
 
 const THEMES = {
@@ -128,8 +128,8 @@ export default function AffichePreview({ config }) {
   const needShadow = hasPhoto || isDark;
 
   const OriginBadge = () => {
-    if (originMode === 'flag' && flagKey && flags?.[flagKey]) {
-      return <span dangerouslySetInnerHTML={{__html:flags[flagKey]}} style={{display:'inline-block',width:24,height:16,borderRadius:2,overflow:'hidden',flexShrink:0,boxShadow:'0 0 0 1px rgba(0,0,0,0.2)'}} />;
+    if (originMode === 'flag' && flagKey && flagUrl(flagKey)) {
+      return <img src={flagUrl(flagKey, 20)} alt={flagLabels[flagKey]||flagKey} style={{width:24,height:'auto',borderRadius:2,flexShrink:0,boxShadow:'0 0 0 1px rgba(0,0,0,0.2)'}} />;
     }
     if (originMode === 'region' && region) {
       return <span style={{display:'inline-block',background:region.color,color:'#fff',fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:99,flexShrink:0}}>{region.name}</span>;

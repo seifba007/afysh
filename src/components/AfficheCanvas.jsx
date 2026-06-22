@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useLayoutEffect, useEffect } from 'react';
-import { flags, COUNTRIES } from '../data/flags.js';
+import { COUNTRIES, flagUrl } from '../data/flags.js';
 import { regions } from '../data/regions.js';
 
 const THEMES = {
@@ -390,7 +390,7 @@ export default function AfficheCanvas({ config, onPositionChange, onResize, edit
     const MARGIN  = 14; // px from edge
 
     // map each element id → its current alignment value (unite excluded — dragged independently)
-    const alignMap = { header: hAlign, prix: pAlign, unite: uAlign, origine: oAlign };
+    const alignMap = { categorie: hAlign, header: hAlign, prix: pAlign, unite: uAlign, origine: oAlign };
 
     Object.entries(alignMap).forEach(([id, align]) => {
       if (prevAlignRef.current[id] === align) return; // no change this render
@@ -412,7 +412,7 @@ export default function AfficheCanvas({ config, onPositionChange, onResize, edit
 
   const OriginBadge = () => {
     if (originMode === 'flag' && flagKey && COUNTRIES?.[flagKey])
-      return <span style={{fontSize:20,lineHeight:1,display:'inline-block',flexShrink:0}}>{COUNTRIES[flagKey].emoji}</span>;
+      return <img src={flagUrl(flagKey, 20)} alt={COUNTRIES[flagKey].label} style={{width:20,height:'auto',borderRadius:2,flexShrink:0,boxShadow:'0 0 0 1px rgba(0,0,0,0.15)'}} />;
     if (originMode === 'region' && region)
       return <span style={{display:'inline-block',background:region.color,color:'#fff',fontSize:10,fontWeight:700,padding:'2px 7px',borderRadius:99,flexShrink:0}}>{region.name}</span>;
     return null;

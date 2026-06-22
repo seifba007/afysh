@@ -3,7 +3,7 @@ import { AppContext } from '../App.jsx';
 import AffichePreview from '../components/AffichePreview.jsx';
 import { TYPO_DEFAULTS } from '../components/AffichePreview.jsx';
 import AfficheCanvas, { ELEM_DEFAULTS } from '../components/AfficheCanvas.jsx';
-import { COUNTRIES } from '../data/flags.js';
+import { COUNTRIES, flagUrl } from '../data/flags.js';
 import { regions } from '../data/regions.js';
 import { useEntitlements } from '../hooks/useEntitlements.js';
 import {
@@ -415,7 +415,7 @@ export default function Editeur({ navigate }) {
     setTimeout(() => setSaved(false), 2500);
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
     let sourceEl, natW, natH, pageMM;
 
     if (config.mode === 'affiche') {
@@ -462,6 +462,28 @@ export default function Editeur({ navigate }) {
     `;
     container.appendChild(clone);
     document.body.appendChild(container);
+
+    // Convert external flag images to data URLs so they print reliably
+    const flagImgs = clone.querySelectorAll('img[src*="flagcdn.com"]');
+    await Promise.all([...flagImgs].map(img => new Promise(resolve => {
+      const toDataUrl = (src) => {
+        fetch(src)
+          .then(r => r.blob())
+          .then(blob => {
+            const reader = new FileReader();
+            reader.onload = () => { img.src = reader.result; resolve(); };
+            reader.onerror = resolve;
+            reader.readAsDataURL(blob);
+          })
+          .catch(resolve);
+      };
+      if (img.complete && img.naturalWidth > 0) {
+        toDataUrl(img.src);
+      } else {
+        img.onload = () => toDataUrl(img.src);
+        img.onerror = resolve;
+      }
+    })));
 
     const afterPrint = () => {
       container.remove();
@@ -567,7 +589,7 @@ export default function Editeur({ navigate }) {
               {selected && (
                 <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-semibold"
                   style={{ background:'#EEF1FA', color:'#20336B' }}>
-                  <span style={{fontSize:18,lineHeight:1}}>{selected.emoji}</span>
+                  <img src={flagUrl(config.flagKey, 20)} alt={selected.label} style={{ width:20, height:'auto', borderRadius:2, flexShrink:0 }} />
                   {selected.label}
                 </div>
               )}
@@ -584,7 +606,7 @@ export default function Editeur({ navigate }) {
                   <button key={k} onClick={() => { set('flagKey',k); setFlagSearch(''); }}
                     className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-left transition-all"
                     style={{ background: config.flagKey===k ? '#EEF1FA' : 'transparent', fontWeight: config.flagKey===k ? 700 : 400, color: config.flagKey===k ? '#20336B' : '#333' }}>
-                    <span style={{fontSize:18,lineHeight:1,flexShrink:0}}>{c.emoji}</span>
+                    <img src={flagUrl(k, 20)} alt={c.label} style={{ width:20, height:'auto', borderRadius:2, flexShrink:0 }} />
                     {c.label}
                   </button>
                 ))}
