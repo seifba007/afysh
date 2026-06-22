@@ -349,6 +349,7 @@ export default function Editeur({ navigate }) {
   const [saved, setSaved]     = useState(false);
   const [autoMsg, setAutoMsg] = useState('');
   const [selectedElems, setSelectedElems] = useState([]);
+  const [flagSearch, setFlagSearch] = useState('');
   const isFirst = useRef(true);
 
   const set  = useCallback((k, v) => setConfig(p => ({...p, [k]:v})), []);
@@ -556,7 +557,6 @@ export default function Editeur({ navigate }) {
             options={[['none','Aucun'],['flag','Drapeau'],['region','Région FR']]} />
         </Field>
         {config.originMode === 'flag' && (() => {
-          const [flagSearch, setFlagSearch] = React.useState('');
           const entries = Object.entries(COUNTRIES);
           const filtered = flagSearch.trim()
             ? entries.filter(([,c]) => c.label.toLowerCase().includes(flagSearch.toLowerCase()))
