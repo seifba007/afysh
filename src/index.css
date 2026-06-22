@@ -1,0 +1,20 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-indigo: #20336B;
+  --color-indigo-light: #4C77CE;
+  --color-indigo-dark: #16234A;
+  --color-cream: #FAF7EF;
+  --color-kraft: #E7DCC4;
+  --color-ink: #1B211E;
+  --color-promo: #D63B27;
+}
+
+body {
+  font-family: 'Archivo', sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+

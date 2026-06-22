@@ -1,0 +1,15 @@
+﻿export const regions = [
+  { id: 'idf', name: 'Ile-de-France', color: '#20336B' },
+  { id: 'ara', name: 'Auvergne-Rhone-Alpes', color: '#2F7A4D' },
+  { id: 'bfc', name: 'Bourgogne-Franche-Comte', color: '#C9A227' },
+  { id: 'bre', name: 'Bretagne', color: '#4C77CE' },
+  { id: 'cvl', name: 'Centre-Val de Loire', color: '#C97B2A' },
+  { id: 'cor', name: 'Corse', color: '#D4537E' },
+  { id: 'ges', name: 'Grand Est', color: '#A32D2D' },
+  { id: 'hdf', name: 'Hauts-de-France', color: '#20336B' },
+  { id: 'nor', name: 'Normandie', color: '#2F7A4D' },
+  { id: 'naq', name: 'Nouvelle-Aquitaine', color: '#C97B2A' },
+  { id: 'occ', name: 'Occitanie', color: '#D63B27' },
+  { id: 'pdl', name: 'Pays de la Loire', color: '#C9A227' },
+  { id: 'pac', name: "Provence-Alpes-Cote d'Azur", color: '#4C77CE' },
+];
