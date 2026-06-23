@@ -16,8 +16,12 @@ export default function App() {
   const [plan, setPlan] = useState('free');
   const [posters, setPosters] = useState(mockPosters);
   const [products, setProducts] = useState(mockProducts);
+  const [editingPosterId, setEditingPosterId] = useState(null);
 
-  const navigate = (page) => setCurrentPage(page);
+  const navigate = (page, posterId = null) => {
+    setEditingPosterId(posterId);
+    setCurrentPage(page);
+  };
 
   const ctx = {
     user, setUser,
@@ -25,6 +29,7 @@ export default function App() {
     posters, setPosters,
     products, setProducts,
     currentPage, navigate,
+    editingPosterId, setEditingPosterId,
   };
 
   const pages = { landing: Landing, auth: Auth, onboarding: Onboarding, espace: Espace, catalogue: Catalogue, editeur: Editeur, billing: Billing };

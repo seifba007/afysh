@@ -511,7 +511,7 @@ export default function AfficheCanvas({ config, onPositionChange, onResize, edit
           opacity:pt.categorie.opacity*0.82, textShadow:needShadow?TS:'none',
           textAlign:hAlign,
         }}>
-          {categorie}{calibre ? ' — '+calibre : ''}
+          {categorie}
         </div>
       </DragEl>
 

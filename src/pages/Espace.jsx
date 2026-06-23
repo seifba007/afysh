@@ -132,12 +132,12 @@ function CategoryTree({ categories, setCategories, onSelect, selected }) {
         onMouseEnter={e => e.currentTarget.style.background = '#EEF1FA'}
         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
         <FolderSimplePlus size={14} weight="bold" />
-        Nouvelle catégorie
+        Nouveau calibre
       </button>
 
       {modal && (
         <PromptModal
-          title={modal.type === 'root' ? 'Nouvelle catégorie' : 'Nouvelle sous-catégorie'}
+          title={modal.type === 'root' ? 'Nouveau calibre' : 'Nouveau sous-calibre'}
           placeholder={modal.type === 'root' ? 'Ex : Fruits, Légumes…' : 'Ex : Agrumes, Salades…'}
           onConfirm={handleConfirm}
           onCancel={() => setModal(null)}
@@ -190,7 +190,7 @@ export default function Espace({ navigate }) {
         {/* Category tree */}
         <div style={{ flex: 1, padding: 12, overflowY: 'auto' }}>
           <p style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#bbb', margin: '0 0 10px 8px' }}>
-            Catégories
+            Calibres
           </p>
           <CategoryTree
             categories={categories}
@@ -279,7 +279,7 @@ export default function Espace({ navigate }) {
                 <PosterCard
                   key={p.id}
                   poster={p}
-                  onOpen={() => navigate('editeur')}
+                  onOpen={() => navigate('editeur', p.id)}
                   onDuplicate={() => duplicateP(p.id)}
                   onDelete={() => deleteP(p.id)}
                 />

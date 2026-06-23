@@ -45,14 +45,14 @@
 ];
 
 export const mockProducts = [
-  { id: 'pr1', name: 'Tomates cerises', calibre: 'Cat. I', price: '2.50', unit: 'euro/barquette', origin: 'France', category: 'Legumes' },
-  { id: 'pr2', name: 'Carottes', calibre: 'Cat. I', price: '1.20', unit: 'euro/kg', origin: 'France', category: 'Legumes' },
-  { id: 'pr3', name: 'Pommes Golden', calibre: 'Cat. Extra', price: '2.80', unit: 'euro/kg', origin: 'France', category: 'Fruits' },
-  { id: 'pr4', name: 'Bananes', calibre: 'Cat. I', price: '1.90', unit: 'euro/kg', origin: "Cote d'Ivoire", category: 'Fruits' },
-  { id: 'pr5', name: 'Baguette Tradition', calibre: '', price: '1.20', unit: 'euro/piece', origin: 'France', category: 'Boulangerie' },
-  { id: 'pr6', name: 'Croissant', calibre: '', price: '1.30', unit: 'euro/piece', origin: 'France', category: 'Boulangerie' },
-  { id: 'pr7', name: 'Entrecote', calibre: '', price: '28.00', unit: 'euro/kg', origin: 'France', category: 'Boucherie' },
-  { id: 'pr8', name: 'Poulet fermier', calibre: '', price: '12.50', unit: 'euro/kg', origin: 'France', category: 'Volaille' },
+  { id: 'pr1', name: 'Tomates cerises', category: 'Cat. I', price: '2.50', unit: '/barquette', origin: 'France', calibre: 'Legumes' },
+  { id: 'pr2', name: 'Carottes', category: 'Cat. I', price: '1.20', unit: '/kg', origin: 'France', calibre: 'Legumes' },
+  { id: 'pr3', name: 'Pommes Golden', category: 'Cat. Extra', price: '2.80', unit: '/kg', origin: 'France', calibre: 'Fruits' },
+  { id: 'pr4', name: 'Bananes', category: 'Cat. I', price: '1.90', unit: '/kg', origin: "Cote d'Ivoire", calibre: 'Fruits' },
+  { id: 'pr5', name: 'Baguette Tradition', category: '', price: '1.20', unit: '/pièce', origin: 'France', calibre: 'Boulangerie' },
+  { id: 'pr6', name: 'Croissant', category: '', price: '1.30', unit: '/pièce', origin: 'France', calibre: 'Boulangerie' },
+  { id: 'pr7', name: 'Entrecote', category: '', price: '28.00', unit: '/kg', origin: 'France', calibre: 'Boucherie' },
+  { id: 'pr8', name: 'Poulet fermier', category: '', price: '12.50', unit: '/kg', origin: 'France', calibre: 'Volaille' },
 ];
 
 export const mockCategories = [

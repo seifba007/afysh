@@ -44,8 +44,8 @@ const THEMES_LIST = [
 ];
 
 const FORMATS  = ['A4','A5','A6','A7'];
-const UNITS    = ['kg','pièce','botte','L','100g','barquette','bouquet'];
-const CALIBRES = ['','Catégorie Extra','Catégorie 1','Catégorie 2'];
+const UNITS    = ['/kg','/pièce','/botte','/L','/100g','/barquette','/bouquet'];
+const CALIBRES = ['','Cat. Extra','Cat. I','Cat. II'];
 const MENTIONS = ['','Nouveau','Promo','Bio','Local'];
 
 const FONTS = [
@@ -66,8 +66,8 @@ const FONTS = [
 
 const defaultConfig = {
   theme:'prix-simple', format:'A4', orientation:'portrait',
-  produit:'Mon Produit', categorie:'Catégorie', calibre:'',
-  prixInt:'2', prixCents:'50', unite:'€/kg',
+  produit:'Mon Produit', categorie:'', calibre:'',
+  prixInt:'2', prixCents:'50', unite:'/kg',
   ancienPrix:'', origine:'France', mention:'',
   originMode:'flag', flagKey:'france', regionId:'france',
   originePosition:'bottom', unitePosition:'below-right',
@@ -330,21 +330,27 @@ const TRADE_COLORS = {
 };
 
 const TRADE_DEFAULTS = {
-  primeur:     { theme:'bio',          unite:'€/kg',      produit:'Fraises Gariguette', categorie:'Fruits',   origine:'France'    },
-  boulangerie: { theme:'boulangerie',  unite:'€/pièce',   produit:'Pain de campagne',   categorie:'Pains',    origine:'France'    },
-  fleuriste:   { theme:'fleuriste',    unite:'€/bouquet', produit:'Roses rouges',       categorie:'Fleurs',   origine:'Pays-Bas'  },
-  boucherie:   { theme:'boucherie',    unite:'€/kg',      produit:'Côte de bœuf',       categorie:'Bœuf',     origine:'France'    },
-  fromager:    { theme:'fromager',     unite:'€/100g',    produit:'Comté 24 mois',      categorie:'Fromages', origine:'France'    },
-  services:    { theme:'prix-simple',  unite:'€/pièce',   produit:'Mon Produit',        categorie:'',         origine:'France'    },
+  primeur:     { theme:'bio',          unite:'/kg',      produit:'Fraises Gariguette', categorie:'', calibre:'Fruits',   origine:'France'    },
+  boulangerie: { theme:'boulangerie',  unite:'/pièce',   produit:'Pain de campagne',   categorie:'', calibre:'Pains',    origine:'France'    },
+  fleuriste:   { theme:'fleuriste',    unite:'/bouquet', produit:'Roses rouges',       categorie:'', calibre:'Fleurs',   origine:'Pays-Bas'  },
+  boucherie:   { theme:'boucherie',    unite:'/kg',      produit:'Côte de bœuf',       categorie:'', calibre:'Bœuf',     origine:'France'    },
+  fromager:    { theme:'fromager',     unite:'/100g',    produit:'Comté 24 mois',      categorie:'', calibre:'Fromages', origine:'France'    },
+  services:    { theme:'prix-simple',  unite:'/pièce',   produit:'Mon Produit',        categorie:'', calibre:'',         origine:'France'    },
 };
 
 export default function Editeur({ navigate }) {
-  const { posters, setPosters, user } = useContext(AppContext);
+  const { posters, setPosters, user, editingPosterId, setEditingPosterId } = useContext(AppContext);
   const ent = useEntitlements();
   const trade    = user?.trade || 'services';
   const tradeColor = TRADE_COLORS[trade] || '#20336B';
   const tradeInit  = TRADE_DEFAULTS[trade] || {};
-  const [config, setConfig] = useState({ ...defaultConfig, ...tradeInit });
+
+  const editingPoster = editingPosterId ? posters.find(p => p.id === editingPosterId) : null;
+  const initialConfig = editingPoster?.config
+    ? { ...defaultConfig, ...tradeInit, ...editingPoster.config }
+    : { ...defaultConfig, ...tradeInit };
+
+  const [config, setConfig] = useState(initialConfig);
   const [tab, setTab]         = useState('contenu');
   const [saved, setSaved]     = useState(false);
   const [autoMsg, setAutoMsg] = useState('');
@@ -396,21 +402,43 @@ export default function Editeur({ navigate }) {
   }, [config]);
 
   const save = () => {
-    const poster = {
-      id: Date.now().toString(),
-      name: config.posterName,
-      category: config.posterCategory,
-      theme: config.theme,
-      produit: config.produit,
-      categorie: config.categorie,
-      prix: config.prixInt + ',' + config.prixCents,
-      unite: config.unite,
-      origine: config.origine,
-      mention: config.mention,
-      flagKey: config.originMode === 'flag' ? config.flagKey : '',
-      createdAt: new Date().toLocaleDateString('fr-FR'),
-    };
-    setPosters(p => [...p, poster]);
+    if (editingPosterId) {
+      setPosters(prev => prev.map(p =>
+        p.id === editingPosterId
+          ? {
+              ...p,
+              name: config.posterName,
+              category: config.calibre,
+              theme: config.theme,
+              produit: config.produit,
+              categorie: config.categorie,
+              prix: config.prixInt + ',' + config.prixCents,
+              unite: config.unite,
+              origine: config.origine,
+              mention: config.mention,
+              flagKey: config.originMode === 'flag' ? config.flagKey : '',
+              config: { ...config },
+            }
+          : p
+      ));
+    } else {
+      const poster = {
+        id: Date.now().toString(),
+        name: config.posterName,
+        category: config.calibre,
+        theme: config.theme,
+        produit: config.produit,
+        categorie: config.categorie,
+        prix: config.prixInt + ',' + config.prixCents,
+        unite: config.unite,
+        origine: config.origine,
+        mention: config.mention,
+        flagKey: config.originMode === 'flag' ? config.flagKey : '',
+        createdAt: new Date().toLocaleDateString('fr-FR'),
+        config: { ...config },
+      };
+      setPosters(p => [...p, poster]);
+    }
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -530,11 +558,11 @@ export default function Editeur({ navigate }) {
   const ContenuTab = () => (
     <>
       <Sec title="Produit">
-        <Field label="Calibre">
-          <Sel value={config.calibre} onChange={v => set('calibre',v)}
+        <Field label="Catégorie">
+          <Sel value={config.categorie} onChange={v => set('categorie',v)}
             options={CALIBRES.map(c => [c, c||'---'])} />
         </Field>
-        <Field label="Catégorie"><TxtInput value={config.categorie} onChange={v => set('categorie',v)} /></Field>
+        <Field label="Calibre"><TxtInput value={config.calibre} onChange={v => set('calibre',v)} placeholder="Ex: Légumes, Boulangerie…" /></Field>
         <Field label="Nom du produit"><TxtInput value={config.produit} onChange={v => set('produit',v)} /></Field>
         <Field label="Mention">
           <Sel value={config.mention} onChange={v => set('mention',v)}
@@ -550,7 +578,6 @@ export default function Editeur({ navigate }) {
             <span className="font-bold text-lg" style={{ color:'#20336B' }}>,</span>
             <input type="number" value={config.prixCents} onChange={e => set('prixCents',e.target.value)} min={0} max={99}
               className="w-14 px-2 py-2 rounded-lg border border-kraft text-sm text-center outline-none font-mono" style={{ background:'#FAF7EF' }} />
-            <span className="font-bold" style={{ color:'#20336B' }}>€</span>
           </div>
         </Field>
         <Field label="Unité">
@@ -629,7 +656,7 @@ export default function Editeur({ navigate }) {
 
       <Sec title="Nom de l'affiche" open={false}>
         <Field label="Nom"><TxtInput value={config.posterName} onChange={v => set('posterName',v)} /></Field>
-        <Field label="Catégorie d'espace"><TxtInput value={config.posterCategory} onChange={v => set('posterCategory',v)} placeholder="Ex: Fruits, Promo..." /></Field>
+        <Field label="Calibre"><TxtInput value={config.calibre} onChange={v => set('calibre',v)} placeholder="Ex: Légumes, Boulangerie…" /></Field>
       </Sec>
     </>
   );
@@ -833,8 +860,8 @@ export default function Editeur({ navigate }) {
           <input type="text" value={config.posterName} onChange={e => set('posterName',e.target.value)}
             className="font-bold text-base border-b border-transparent hover:border-kraft focus:border-indigo-300 outline-none bg-transparent min-w-0"
             style={{ color:'#20336B', fontFamily:'Fredoka', maxWidth:220 }} />
-          <input type="text" value={config.posterCategory} onChange={e => set('posterCategory',e.target.value)}
-            placeholder="Catégorie..."
+          <input type="text" value={config.calibre} onChange={e => set('calibre',e.target.value)}
+            placeholder="Calibre..."
             className="text-xs border border-kraft rounded-lg px-2.5 py-1.5 outline-none"
             style={{ background:'#FAF7EF', color:'#666', width:130 }} />
           <div className="flex-1" />

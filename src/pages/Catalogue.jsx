@@ -6,10 +6,10 @@ import {
   Layout, Trash, X,
 } from '@phosphor-icons/react/dist/ssr';
 
-const UNITS    = ['€/kg', '€/pièce', '€/botte', '€/L', '€/100g', '€/barquette', '€/bouquet'];
+const UNITS    = ['/kg', '/pièce', '/botte', '/L', '/100g', '/barquette', '/bouquet'];
 const CALIBRES = ['', 'Cat. Extra', 'Cat. I', 'Cat. II'];
 
-const emptyForm = { name: '', calibre: '', price: '', unit: '€/kg', origin: 'France', category: '' };
+const emptyForm = { name: '', calibre: '', price: '', unit: '/kg', origin: 'France', category: '' };
 
 export default function Catalogue({ navigate }) {
   const { products, setProducts } = useContext(AppContext);
@@ -71,7 +71,7 @@ export default function Catalogue({ navigate }) {
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: '#FAF7EF', borderBottom: '1px solid #E7DCC4' }}>
-                {['Produit', 'Calibre', 'Prix', 'Unité', 'Origine', 'Catégorie', 'Actions'].map(h => (
+                {['Produit', 'Catégorie', 'Prix', 'Unité', 'Origine', 'Calibre', 'Actions'].map(h => (
                   <th key={h} className="px-4 py-3 text-left font-semibold text-xs uppercase tracking-wider" style={{ color: '#888' }}>{h}</th>
                 ))}
               </tr>
@@ -80,11 +80,11 @@ export default function Catalogue({ navigate }) {
               {filtered.map((p, i) => (
                 <tr key={p.id} style={{ borderBottom: i < filtered.length - 1 ? '1px solid #F0EBE0' : 'none' }}>
                   <td className="px-4 py-3 font-medium" style={{ color: '#1B211E' }}>{p.name}</td>
-                  <td className="px-4 py-3" style={{ color: '#666' }}>{p.calibre || '---'}</td>
+                  <td className="px-4 py-3" style={{ color: '#666' }}>{p.category || '---'}</td>
                   <td className="px-4 py-3 font-semibold" style={{ color: '#D63B27' }}>{p.price} €</td>
                   <td className="px-4 py-3" style={{ color: '#666' }}>{p.unit}</td>
                   <td className="px-4 py-3" style={{ color: '#666' }}>{p.origin}</td>
-                  <td className="px-4 py-3" style={{ color: '#666' }}>{p.category}</td>
+                  <td className="px-4 py-3" style={{ color: '#666' }}>{p.calibre}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1">
                       <button
@@ -137,7 +137,7 @@ export default function Catalogue({ navigate }) {
               </button>
             </div>
             <div className="space-y-3">
-              {[['name', 'Nom du produit', 'text'], ['price', 'Prix', 'text'], ['origin', 'Origine', 'text'], ['category', 'Catégorie', 'text']].map(([key, label, type]) => (
+              {[['name', 'Nom du produit', 'text'], ['price', 'Prix', 'text'], ['origin', 'Origine', 'text'], ['calibre', 'Calibre (interne)', 'text']].map(([key, label, type]) => (
                 <div key={key}>
                   <label className="block text-xs font-medium mb-1" style={{ color: '#444' }}>{label}</label>
                   <input
@@ -151,8 +151,8 @@ export default function Catalogue({ navigate }) {
               ))}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium mb-1" style={{ color: '#444' }}>Calibre</label>
-                  <select value={form.calibre} onChange={e => setForm(f => ({ ...f, calibre: e.target.value }))}
+                  <label className="block text-xs font-medium mb-1" style={{ color: '#444' }}>Catégorie</label>
+                  <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
                     className="w-full px-3 py-2 rounded-xl border border-kraft text-sm outline-none"
                     style={{ background: '#FAF7EF' }}>
                     {CALIBRES.map(c => <option key={c} value={c}>{c || '---'}</option>)}
