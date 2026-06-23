@@ -44,8 +44,8 @@ const THEMES_LIST = [
 ];
 
 const FORMATS  = ['A4','A5','A6','A7'];
-const UNITS    = ['€/kg','€/pièce','€/botte','€/L','€/100g','€/barquette','€/bouquet'];
-const CALIBRES = ['','Cat. Extra','Cat. I','Cat. II'];
+const UNITS    = ['kg','pièce','botte','L','100g','barquette','bouquet'];
+const CALIBRES = ['','Catégorie Extra','Catégorie 1','Catégorie 2'];
 const MENTIONS = ['','Nouveau','Promo','Bio','Local'];
 
 const FONTS = [
@@ -530,11 +530,11 @@ export default function Editeur({ navigate }) {
   const ContenuTab = () => (
     <>
       <Sec title="Produit">
-        <Field label="Catégorie"><TxtInput value={config.categorie} onChange={v => set('categorie',v)} /></Field>
         <Field label="Calibre">
           <Sel value={config.calibre} onChange={v => set('calibre',v)}
             options={CALIBRES.map(c => [c, c||'---'])} />
         </Field>
+        <Field label="Catégorie"><TxtInput value={config.categorie} onChange={v => set('categorie',v)} /></Field>
         <Field label="Nom du produit"><TxtInput value={config.produit} onChange={v => set('produit',v)} /></Field>
         <Field label="Mention">
           <Sel value={config.mention} onChange={v => set('mention',v)}
